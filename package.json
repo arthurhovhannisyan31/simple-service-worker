@@ -1,0 +1,4 @@
+{
+  "name": "simple-service-worker",
+  "packageManager": "yarn@4.6.0"
+}
