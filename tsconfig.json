@@ -1,0 +1,21 @@
+{
+  "extends": "./configs/typescript/tsconfig.rules.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "baseUrl": "lib",
+    "paths": {
+      "lib/*": ["lib/*"]
+    },
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "webworker"
+    ],
+    "types": [
+      "node"
+    ]
+  },
+}
