@@ -12,6 +12,7 @@ export class StoreManager {
   estimate = async (): Promise<void> => {
     const sm = navigator.storage;
     const { usage, quota } = await sm.estimate();
+
     if (usage !== undefined && quota !== undefined) {
       this.storageState.quotaMemory = quota;
       this.storageState.usedMemory = usage;

@@ -1,17 +1,13 @@
-export const SW_VERSION = "v0.5";
-export const NEXT_CACHE_VERSION = "NEXT_CACHE_v1.0";
-export const SW_ACTIVE = process.env.NEXT_PUBLIC_SW_ACTIVE === "true";
-export const SW_PATH = "/service-worker.js";
-export const NEXT_BASE_PATH = "_next";
-export const NEXT_STATIC_FILE_PATH = `${NEXT_BASE_PATH}/static/`;
-export const SW_BROADCAST_CHANNEL = "SW_BROADCAST_CHANNEL";
+import { isDebugMode, parseJSONArray } from "lib/helpers";
+
+export const DEFAULT_CACHE_VERSION = "0.0.1";
+export const DEFAULT_ASSETS_PATH = "/";
+export const SW_VERSION = "v1.0.0";
+export const DEFAULT_SW_PATH = "/service-worker.js";
 /*
 * Safari is excluded due to issues with binding onFetch event for SW
 * Tested on MacOS BigSur VBox
-*  */
-export const ALLOWED_BROWSERS: string[] = ["Chrome", "Edge", "Chromium", "Firefox", "Opera"];
-
-export const FORBIDDEN_DOMAINS: string[] = ["vercel", "intercom"];
+* */
 
 export enum SWActions {
   SHOW_NOTIFICATION = "SHOW_NOTIFICATION",
@@ -26,6 +22,7 @@ export enum SWActions {
   UPDATE_FOUND = "UPDATE_FOUND",
 }
 
+// TODO Check usages
 export const SWActionLabels: Partial<Record<SWActions, string>> = {
   [SWActions.REGISTRATION]: "SW registration",
   [SWActions.REGISTRATION_FAILURE]: "SW registration failure",
@@ -37,3 +34,17 @@ export const swRegistrationConfig: RegistrationOptions = {
   updateViaCache: "all",
   scope: "/",
 };
+
+export enum HttpStatusCode {
+  PartialContent = 206,
+  RangeNotSatisfiable = 416,
+}
+
+export const ALLOWED_BROWSERS = new RegExp(process.env.ALLOWED_BROWSERS ?? ".*"); // optional
+export const ASSETS_PATH = process.env.ASSETS_PATH ?? DEFAULT_ASSETS_PATH; // optional
+export const CACHE_VERSION = process.env.CACHE_VERSION ?? DEFAULT_CACHE_VERSION; // optional
+export const DEBUG_MODE = !!process.env.DEBUG || isDebugMode(); // optional
+export const FORBIDDEN_DOMAINS: string[] = parseJSONArray(process.env.FORBIDDEN_DOMAINS ?? "[]"); // optional
+export const STATIC_ASSETS_PATH = process.env.ASSETS_PATH ?? DEFAULT_ASSETS_PATH; // optional
+export const SW_PATH = process.env.SW_PATH ?? DEFAULT_SW_PATH; // optional
+export const SW_ENABLED = !!process.env.SW_ENABLED; // required

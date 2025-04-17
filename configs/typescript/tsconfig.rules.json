@@ -6,6 +6,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "allowJs": true,
-    "incremental": true
+    "incremental": true,
+    "skipLibCheck": true,
+    "noEmit": true
   }
 }

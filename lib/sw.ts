@@ -1,30 +1,41 @@
-import { AbstractSW } from "lib/workers/service-worker/common/abstract-sw";
-import { CacheManager } from "lib/workers/service-worker/managers/cache-manager";
-import { DataManager } from "lib/workers/service-worker/managers/data-manager";
-import { StoreManager } from "lib/workers/service-worker/managers/store-manager";
+import { AbstractSW } from "lib/common/abstract-sw";
+import { CacheManager } from "lib/managers/cache-manager";
+import { DataManager } from "lib/managers/data-manager";
+import { StoreManager } from "lib/managers/store-manager";
 
-import { NEXT_STATIC_FILE_PATH, SW_VERSION, SWActions } from "./constants";
-import assetsManifest from "../../../../configs/generated/assets-manifest.json";
+import {
+  ASSETS_PATH,
+  CACHE_VERSION,
+  DEBUG_MODE,
+  STATIC_ASSETS_PATH,
+  SW_VERSION,
+  SWActions
+} from "./constants";
 
-import type { AssetsManifest } from "lib/workers/service-worker/types";
+import type { AssetsManifest } from "lib/types";
 
 export class MainSW extends AbstractSW {
   cacheManager: CacheManager;
-
   storageManager: StoreManager;
-
   dataManager: DataManager;
-
-  client: Client;
-
+  client?: Client;
   version = SW_VERSION;
 
   constructor(sw: ServiceWorkerGlobalScope) {
     super(sw);
 
     this.storageManager = new StoreManager(sw);
-    this.cacheManager = new CacheManager(sw, this.storageManager);
-    this.dataManager = new DataManager(sw, this.cacheManager);
+    this.cacheManager = new CacheManager(
+      sw,
+      this.storageManager,
+      CACHE_VERSION,
+      DEBUG_MODE
+    );
+    this.dataManager = new DataManager(
+      sw,
+      this.cacheManager,
+      CACHE_VERSION
+    );
 
     this.setup(
       this.onInstall,
@@ -36,7 +47,19 @@ export class MainSW extends AbstractSW {
 
   init = async (): Promise<void> => {
     await this.storageManager.estimate();
-    await this.cacheManager.init(assetsManifest as never as AssetsManifest);
+    // ../../../../configs/generated/assets-manifest.json
+    const assetsPath: string = process.env.ASSETS_MANIFEST ?? "";
+
+    if (!assetsPath) {
+      return;
+    }
+
+    const assetsManifest = await fetch(assetsPath); // TODO Add types
+
+    await this.cacheManager.init(
+      assetsManifest as never as AssetsManifest,
+      ASSETS_PATH
+    );
   };
 
   onInstall: ServiceWorkerGlobalScope["oninstall"] = (_e): void => {
@@ -68,7 +91,7 @@ export class MainSW extends AbstractSW {
       return;
     }
 
-    if (_e.request.method === "GET" && _e.request.url.includes(NEXT_STATIC_FILE_PATH)) {
+    if (_e.request.method === "GET" && _e.request.url.includes(STATIC_ASSETS_PATH)) {
       _e.respondWith(this.dataManager.cacheWithPreload(
         _e.request,
         _e.preloadResponse,
