@@ -1,6 +1,4 @@
-import { HttpStatusCode } from "axios";
-
-import { NEXT_CACHE_VERSION } from "lib/workers/service-worker/constants";
+import { HttpStatusCode } from "lib/constants";
 
 import type { CacheManager } from "./cache-manager";
 
@@ -8,6 +6,7 @@ export class DataManager {
   constructor(
     protected worker: ServiceWorkerGlobalScope,
     protected cacheManager: CacheManager,
+    protected cacheVersion: string
   ) {}
 
   enableNavigationPreload = async (): Promise<void> => {
@@ -20,7 +19,7 @@ export class DataManager {
     request: FetchEvent["request"],
     preloadedResponse: FetchEvent["preloadResponse"],
   ): Promise<Response> => {
-    const versionedCache = await caches.open(NEXT_CACHE_VERSION);
+    const versionedCache = await caches.open(this.cacheVersion);
     const responseFromCache = await versionedCache.match(request.url);
     const rangedRequest = !!request.headers.get("range");
 
@@ -61,7 +60,7 @@ export class DataManager {
   ): Promise<Response> => {
     const arrayBuffer = await response.arrayBuffer();
     const bytes = /^bytes=(\d+)-(\d+)?$/g.exec(
-      request.headers.get("range"),
+      request.headers.get("range") as string,
     );
 
     if (!bytes) {
@@ -79,7 +78,7 @@ export class DataManager {
     headers.append("Content-Range", `bytes ${start}-${end}/${arrayBuffer.byteLength}`);
     headers.append("Content-Length", arrayBuffer.byteLength.toString());
     ["Content-Security-Policy", "Content-Type"].forEach((header) => {
-      headers.append(header, response.headers.get(header));
+      headers.append(header, response.headers.get(header) as string);
     });
 
     return new Response(

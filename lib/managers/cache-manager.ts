@@ -1,20 +1,26 @@
-import { PROD_ENV } from "configs/constants";
-import { NEXT_CACHE_VERSION } from "lib/workers/service-worker/constants";
-import { getAssetsConfig } from "lib/workers/service-worker/helpers";
+import { getAssetsConfig } from "lib/helpers";
 
 import type { StoreManager } from "./store-manager";
-import type { AssetsManifest } from "lib/workers/service-worker/types";
+import type { AssetsManifest } from "lib/types";
 
 export class CacheManager {
-  assets: RequestInfo[];
+  assets: string[] = [];
 
   constructor(
     protected worker: ServiceWorkerGlobalScope,
     protected storeManager: StoreManager,
+    protected cacheVersion: string,
+    protected debug: boolean,
   ) {}
 
-  init = async (assetsManifest: AssetsManifest): Promise<void> => {
-    const { paths, prefetchPaths, prefetchSize } = getAssetsConfig(assetsManifest);
+  init = async (
+    assetsManifest: AssetsManifest,
+    assetsPath: string
+  ): Promise<void> => {
+    const { paths, prefetchPaths, prefetchSize } = getAssetsConfig(
+      assetsManifest,
+      assetsPath
+    );
 
     this.assets = paths;
 
@@ -29,7 +35,7 @@ export class CacheManager {
       const estimation = this.storeManager.getEstimation();
 
       if (estimation.quotaMemory > size) {
-        const versionedCache = await caches.open(NEXT_CACHE_VERSION);
+        const versionedCache = await caches.open(this.cacheVersion);
 
         await versionedCache.addAll(requests);
       }
@@ -45,7 +51,7 @@ export class CacheManager {
       const responseSize = Number(response.headers.get("content-length") ?? 0);
 
       if (estimation.quotaMemory > responseSize) {
-        const versionedCache = await caches.open(NEXT_CACHE_VERSION);
+        const versionedCache = await caches.open(this.cacheVersion);
 
         await versionedCache.put(request, response);
       }
@@ -64,25 +70,30 @@ export class CacheManager {
   };
 
   deleteOldCaches = async (): Promise<void> => {
-    const cacheKeepList = [NEXT_CACHE_VERSION];
+    const cacheKeepList = [this.cacheVersion];
     const keyList = await caches.keys();
     const cachesToDelete = keyList.filter((key) => !cacheKeepList.includes(key));
     await Promise.all(cachesToDelete.map(this.delete));
   };
 
   deleteOldResources = async (): Promise<void> => {
-    const versionedCache = await caches.open(NEXT_CACHE_VERSION);
+    if (!this.assets.length) {
+      return;
+    }
+
+    const versionedCache = await caches.open(this.cacheVersion);
     const versionedCacheKeys = await versionedCache.keys();
     const removedAssets: string[] = [];
 
-    versionedCacheKeys.forEach((request) => {
+    versionedCacheKeys.forEach((request: Request) => {
       if (!this.assets.some((asset: string) => request.url.includes(asset))) {
-        if (!PROD_ENV) removedAssets.push(request.url);
+        if (!this.debug) removedAssets.push(request.url);
 
         versionedCache.delete(request);
       }
     });
-    if (!PROD_ENV && removedAssets.length) {
+
+    if (!this.debug && removedAssets.length) {
       console.group("Debug: Remove outdated assets from cache");
       removedAssets.forEach((el) => console.log(el));
       console.groupEnd();
