@@ -1,19 +1,15 @@
-import { trackEvents } from "lib/util-functions";
-import { createAction, createSimpleAction } from "lib/workers/actions/createAction";
-import { SWActions, SW_VERSION, SWActionLabels } from "lib/workers/service-worker/constants";
-import { isShowNotificationAction } from "lib/workers/service-worker/helpers";
+import { SWActions } from "lib/constants";
+import { createAction, createSimpleAction, isShowNotificationAction } from "lib/helpers";
 
 export class SWManager {
-  container: ServiceWorkerContainer;
-
-  registration: ServiceWorkerRegistration;
-
-  sw: ServiceWorker | null = null;
+  container?: ServiceWorkerContainer;
+  registration?: ServiceWorkerRegistration;
+  sw: ServiceWorker | null | undefined;
 
   protected constructor(swRegistration: ServiceWorkerRegistration) {
     this.initContainer();
     this.initRegistration(swRegistration);
-    this.sw = this.container.controller;
+    this.sw = this.container?.controller;
     this.onRegistrationEnd();
   }
 
@@ -36,8 +32,9 @@ export class SWManager {
   static async register(
     url: string,
     options?: RegistrationOptions,
+    // postMessage: () => void,
   ): Promise<SWManager> {
-    let swRegistration: ServiceWorkerRegistration;
+    let swRegistration: ServiceWorkerRegistration | undefined;
     swRegistration = await navigator.serviceWorker.getRegistration(url);
 
     if (swRegistration) {
@@ -46,12 +43,14 @@ export class SWManager {
       swRegistration = await navigator.serviceWorker.register(url, options);
     }
 
-    trackEvents({
-      eventName: SWActionLabels[SWActions.REGISTRATION],
-      eventProperties: {
-        SW_VERSION,
-      },
-    });
+    // TODO Post message
+
+    // trackEvents({
+    //   eventName: SWActionLabels[SWActions.REGISTRATION],
+    //   eventProperties: {
+    //     SW_VERSION,
+    //   },
+    // });
 
     return new SWManager(swRegistration);
   }
@@ -60,12 +59,14 @@ export class SWManager {
     if (navigator.serviceWorker.controller) {
       this.sw = navigator.serviceWorker.controller;
 
-      this.container.onmessage = this.onMessage;
+      if (this.container) {
+        this.container.onmessage = this.onMessage;
+      }
     }
   };
 
   protected onRegistrationEnd = async (): Promise<void> => {
-    this.sw = this.registration.active;
+    this.sw = this.registration?.active;
     await this.postMessage(createAction(SWActions.REGISTRATION_END, "SWManager: Registration end"));
     await this.postMessage(createSimpleAction(SWActions.CONNECT_CLIENT));
   };
@@ -75,7 +76,7 @@ export class SWManager {
   };
 
   protected onStateChange: ServiceWorker["onstatechange"] = async () => {
-    this.sw = this.registration.active;
+    this.sw = this.registration?.active;
     await this.postMessage(createSimpleAction("SWManager: state change"));
   };
 
@@ -83,12 +84,14 @@ export class SWManager {
 
   protected onMessageError: ServiceWorkerContainer["onmessageerror"] = () => {};
 
-  postMessage = async (action: AnyAction): Promise<void> => {
-    switch (action.type) {
+  postMessage = async (
+    action: AnyAction
+  ): Promise<void> => {
+    switch (action.type as SWActions) {
       case SWActions.SHOW_NOTIFICATION: {
         if (isShowNotificationAction(action)) {
-          await this.registration.showNotification(
-            action.payload.body,
+          await this.registration?.showNotification(
+            action.payload.body ?? "",
             action.payload,
           );
         }
@@ -106,8 +109,8 @@ export class SWManager {
     }
   };
 
-  #unregister(): Promise<boolean> {
-    return this.registration.unregister();
+  async #unregister(): Promise<boolean> {
+    return await this.registration?.unregister() ?? false;
   }
 
   static async unregister(url: string): Promise<void> {
