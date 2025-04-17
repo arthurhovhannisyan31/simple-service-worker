@@ -17,6 +17,7 @@ const languageOptionsConfig = {
     ecmaVersion: "latest",
     sourceType: "module",
     globals: {
+      ...globals.serviceworker,
       ...globals.browser,
       ...globals.node
     },
@@ -162,17 +163,9 @@ export const importsConfigs = [
       },
     },
     rules: {
-      "import/no-named-as-default": "warn", // TODO
+      "import/no-named-as-default": "warn",
       "import/prefer-default-export": 0,
-      "import/no-extraneous-dependencies": "warn", // TODO
-      // "import-newlines/enforce": [ // TODO
-      //   "error",
-      //   {
-      //     "max-len": 120,
-      //     semi: true,
-      //     forceSingleLine: false,
-      //   },
-      // ],
+      "import/no-extraneous-dependencies": "warn",
       "import/order": [
         "error",
         {

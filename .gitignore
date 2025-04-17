@@ -14,6 +14,13 @@
 
 #local
 notes*
+.env
 
 # dependencies
 /node_modules
+
+# eslint
+.eslintcache
+
+# typescript
+*.tsbuildinfo
