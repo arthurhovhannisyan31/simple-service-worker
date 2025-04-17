@@ -12,7 +12,7 @@
     "access": "restricted"
   },
   "exports": {
-    ".": "./lib/*"
+    "./lib/*": "./lib/*"
   },
   "scripts": {
     "lint": "yarn eslint '**/*.{js,ts,ts}' --cache --quiet",
