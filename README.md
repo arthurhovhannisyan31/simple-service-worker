@@ -27,6 +27,20 @@ unregisters existing `SW` if flag is disabled.
 
 ## Workflow
 
+### Bootstrap
+- Create sw.js file and init module scoped worker
+```javascript
+// Add example
+``` 
+- Configure webpack build for service worker
+```javascript
+// Add example
+```
+- Update project build workflow 
+```javascript
+// Add example
+```
+
 ### Build
 During the build process NextJS generates a json report, the `assets-manifest.json`. This report
 includes information about the generated static assets. Filenames include the hashed code, the [contenthash](https://webpack.js.org/guides/caching/#output-filenames). It works as file versioning and helps to
@@ -103,3 +117,4 @@ Please see the links for details.
 > Learn more:
 > - [Webpack build's [contenthash] diverges from build to build](https://github.com/webpack/webpack/issues/17757)
 > - [ServiceWorkerRegistration:update](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/update)
+

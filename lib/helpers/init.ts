@@ -24,7 +24,7 @@ export const isSWRegistrationValid = (): boolean => {
   return DEBUG_MODE || (!isIframe() && isBrowserAllowed && isReferrerAllowed);
 };
 
-const initSw = async (): Promise<SWManager | undefined> => {
+export const initSw = async (): Promise<SWManager | undefined> => {
   const isSwEnabled = DEBUG_MODE || SW_ENABLED;
 
   if (!isSwEnabled) {
