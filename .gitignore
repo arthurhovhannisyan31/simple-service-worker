@@ -12,15 +12,12 @@
 #!.yarn/cache
 .pnp.*
 
+#dev
+.env
+/node_modules
+.eslintcache
+*.tsbuildinfo
+dist
+
 #local
 notes*
-.env
-
-# dependencies
-/node_modules
-
-# eslint
-.eslintcache
-
-# typescript
-*.tsbuildinfo
