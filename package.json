@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "author": "Arthur Hovhannisyan",
   "private": true,
   "name": "@arthurhovhannisyan31/simple-service-worker",
@@ -12,9 +13,10 @@
     "access": "restricted"
   },
   "exports": {
-    "./lib/*": "./lib/*"
+    ".": "./dist/*"
   },
   "scripts": {
+    "build": "./configs/scripts/build.sh",
     "lint": "yarn eslint '**/*.{js,ts,ts}' --cache --quiet",
     "lint:warn": "yarn lint --max-warnings 100",
     "lint:staged": "./configs/scripts/lint-staged.sh",
