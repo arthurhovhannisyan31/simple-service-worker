@@ -6,10 +6,6 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "outDir": "dist",
-    "paths": {
-      "lib/*": ["lib/*"],
-      "configs/*": ["configs/*"]
-    },
     "lib": [
       "esnext",
       "dom",
@@ -33,5 +29,6 @@
   ],
   "exclude": [
     "node_modules",
+    "dist"
   ]
 }

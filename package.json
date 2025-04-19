@@ -3,7 +3,6 @@
   "description": "Simple service worker package",
   "author": "Arthur Hovhannisyan",
   "name": "@arthurhovhannisyan31/simple-service-worker",
-  "type": "module",
   "private": true,
   "scope": "arthurhovhannisyan31",
   "license": "MIT",
@@ -18,11 +17,7 @@
   "publishConfig": {
     "access": "restricted"
   },
-  "exports": {
-    "import": {
-      ".": "./dist/*"
-    }
-  },
+  "main": "./dist/index.js",
   "scripts": {
     "build": "./configs/scripts/build.sh",
     "lint": "yarn eslint '**/*.{js,ts,ts}' --cache --quiet",
