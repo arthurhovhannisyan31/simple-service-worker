@@ -47,14 +47,13 @@ export class MainSW extends AbstractSW {
 
   init = async (): Promise<void> => {
     await this.storageManager.estimate();
-    // ../../../../configs/generated/assets-manifest.json
-    const assetsPath: string = process.env.ASSETS_MANIFEST ?? "";
+    const assetsPath: string | undefined = process.env.ASSETS_MANIFEST;
 
     if (!assetsPath) {
       return;
     }
 
-    const assetsManifest = await fetch(assetsPath); // TODO Add types
+    const assetsManifest = await fetch(assetsPath); // TODO Add types for response
 
     await this.cacheManager.init(
       assetsManifest as never as AssetsManifest,

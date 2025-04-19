@@ -5,7 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "baseUrl": ".",
-    "outDir": "./dist",
+    "outDir": "dist",
     "paths": {
       "lib/*": ["lib/*"],
       "configs/*": ["configs/*"]
