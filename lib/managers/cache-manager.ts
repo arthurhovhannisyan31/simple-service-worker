@@ -1,7 +1,7 @@
-import { getAssetsConfig } from "lib/helpers";
+import { getAssetsConfig } from "../helpers";
 
 import type { StoreManager } from "./store-manager";
-import type { AssetsManifest } from "lib/types";
+import type { AssetsManifest } from "../types";
 
 export class CacheManager {
   assets: string[] = [];

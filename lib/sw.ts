@@ -1,8 +1,4 @@
-import { AbstractSW } from "lib/common/abstract-sw";
-import { CacheManager } from "lib/managers/cache-manager";
-import { DataManager } from "lib/managers/data-manager";
-import { StoreManager } from "lib/managers/store-manager";
-
+import { AbstractSW } from "./common";
 import {
   ASSETS_PATH,
   CACHE_VERSION,
@@ -11,8 +7,9 @@ import {
   SW_VERSION,
   SWActions
 } from "./constants";
+import { CacheManager, DataManager, StoreManager } from "./managers";
 
-import type { AssetsManifest } from "lib/types";
+import type { AssetsManifest } from "./types";
 
 export class MainSW extends AbstractSW {
   cacheManager: CacheManager;

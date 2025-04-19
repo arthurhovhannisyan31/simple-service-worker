@@ -1,8 +1,8 @@
-import { SWActions } from "lib/constants";
-
-export const isDebugMode = (): boolean => localStorage.getItem("sw-debug") === "true";
+import { SWActions } from "../constants";
 
 export const isSSR = (): boolean => typeof window === "undefined";
+
+export const isDebugMode = (): boolean => !isSSR() && localStorage.getItem("sw-debug") === "true";
 
 export const isIframe = (): boolean => {
   try {
