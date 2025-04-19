@@ -1,7 +1,5 @@
-import { AbstractSW } from "lib/common/abstract-sw";
-import { CacheManager } from "lib/managers/cache-manager";
-import { DataManager } from "lib/managers/data-manager";
-import { StoreManager } from "lib/managers/store-manager";
+import { AbstractSW } from "./common";
+import { CacheManager, DataManager, StoreManager } from "./managers";
 export declare class MainSW extends AbstractSW {
     cacheManager: CacheManager;
     storageManager: StoreManager;

@@ -1,5 +1,5 @@
 import type { StoreManager } from "./store-manager";
-import type { AssetsManifest } from "lib/types";
+import type { AssetsManifest } from "../types";
 export declare class CacheManager {
     protected worker: ServiceWorkerGlobalScope;
     protected storeManager: StoreManager;

@@ -1,6 +1,6 @@
-import { SWActions } from "lib/constants";
-export const isDebugMode = () => localStorage.getItem("sw-debug") === "true";
+import { SWActions } from "../constants";
 export const isSSR = () => typeof window === "undefined";
+export const isDebugMode = () => !isSSR() && localStorage.getItem("sw-debug") === "true";
 export const isIframe = () => {
     try {
         return window.self !== window.top;

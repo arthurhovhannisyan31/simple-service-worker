@@ -1,8 +1,8 @@
 // eslint-disable-next-line import/no-unresolved
 import { UAParser } from "ua-parser-js";
-import { ALLOWED_BROWSERS, DEBUG_MODE, FORBIDDEN_DOMAINS, SW_ENABLED, SW_PATH, swRegistrationConfig } from "lib/constants";
-import { isSSR, isIframe } from "lib/helpers/utils";
-import { SWManager } from "lib/managers";
+import { ALLOWED_BROWSERS, DEBUG_MODE, FORBIDDEN_DOMAINS, SW_ENABLED, SW_PATH, swRegistrationConfig } from "../constants";
+import { isSSR, isIframe } from "./utils";
+import { SWManager } from "../managers";
 export const isSWRegistrationValid = () => {
     if (isSSR() || !navigator.serviceWorker)
         return false;
