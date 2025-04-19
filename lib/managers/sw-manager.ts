@@ -1,5 +1,5 @@
-import { SWActions } from "lib/constants";
-import { createAction, createSimpleAction, isShowNotificationAction } from "lib/helpers";
+import { SWActions } from "../constants";
+import { createAction, createSimpleAction, isShowNotificationAction } from "../helpers";
 
 export class SWManager {
   container?: ServiceWorkerContainer;

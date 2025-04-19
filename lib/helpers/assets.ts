@@ -1,4 +1,4 @@
-import type { AssetsConfig, AssetsManifest } from "lib/types";
+import type { AssetsConfig, AssetsManifest } from "../types";
 
 export const getAssetsConfig = (
   assetsManifest: AssetsManifest,
