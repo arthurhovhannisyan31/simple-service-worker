@@ -1,5 +1,5 @@
 export declare const DEFAULT_CACHE_VERSION = "0.0.1";
-export declare const DEFAULT_ASSETS_PATH = "/";
+export declare const DEFAULT_ASSETS_PATH = "";
 export declare const SW_VERSION = "v1.0.0";
 export declare const DEFAULT_SW_PATH = "/service-worker.js";
 export declare enum SWActions {

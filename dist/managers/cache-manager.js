@@ -1,4 +1,4 @@
-import { getAssetsConfig } from "lib/helpers";
+import { getAssetsConfig } from "../helpers";
 export class CacheManager {
     worker;
     storeManager;

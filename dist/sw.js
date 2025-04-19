@@ -1,8 +1,6 @@
-import { AbstractSW } from "lib/common/abstract-sw";
-import { CacheManager } from "lib/managers/cache-manager";
-import { DataManager } from "lib/managers/data-manager";
-import { StoreManager } from "lib/managers/store-manager";
+import { AbstractSW } from "./common";
 import { ASSETS_PATH, CACHE_VERSION, DEBUG_MODE, STATIC_ASSETS_PATH, SW_VERSION, SWActions } from "./constants";
+import { CacheManager, DataManager, StoreManager } from "./managers";
 export class MainSW extends AbstractSW {
     cacheManager;
     storageManager;
@@ -18,12 +16,11 @@ export class MainSW extends AbstractSW {
     }
     init = async () => {
         await this.storageManager.estimate();
-        // ../../../../configs/generated/assets-manifest.json
-        const assetsPath = process.env.ASSETS_MANIFEST ?? "";
+        const assetsPath = process.env.ASSETS_MANIFEST;
         if (!assetsPath) {
             return;
         }
-        const assetsManifest = await fetch(assetsPath); // TODO Add types
+        const assetsManifest = await fetch(assetsPath); // TODO Add types for response
         await this.cacheManager.init(assetsManifest, ASSETS_PATH);
     };
     onInstall = (_e) => {

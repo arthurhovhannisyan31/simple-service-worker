@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "lib/constants";
+import { HttpStatusCode } from "../constants";
 export class DataManager {
     worker;
     cacheManager;
