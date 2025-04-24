@@ -142,9 +142,3 @@ export class MainSW extends AbstractSW {
     await this.cacheManager.deleteAll();
   }
 }
-//
-// declare const self: ServiceWorkerGlobalScope;
-//
-// new MainSW(self);
-//
-// export default {} as ServiceWorker;

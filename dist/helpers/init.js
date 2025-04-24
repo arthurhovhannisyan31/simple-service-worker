@@ -10,12 +10,26 @@ export const isSWRegistrationValid = () => {
     const curBrowser = parser.getBrowser()?.name ?? "None";
     const isBrowserAllowed = ALLOWED_BROWSERS.test(curBrowser);
     const isReferrerAllowed = !FORBIDDEN_DOMAINS.some((domain) => document.referrer.includes(domain) || document.URL.includes(domain));
+    console.log({
+        ALLOWED_BROWSERS,
+        curBrowser,
+        isBrowserAllowed,
+        FORBIDDEN_DOMAINS,
+        isReferrerAllowed,
+        DEBUG_MODE,
+        valid: DEBUG_MODE || (!isIframe() && isBrowserAllowed && isReferrerAllowed)
+    });
     return DEBUG_MODE || (!isIframe() && isBrowserAllowed && isReferrerAllowed);
 };
 export const initSw = async () => {
-    const isSwEnabled = DEBUG_MODE || SW_ENABLED;
-    if (!isSwEnabled) {
+    console.log({
+        SW_ENABLED
+    });
+    if (!SW_ENABLED) {
         try {
+            console.log({
+                SW_PATH
+            });
             await SWManager.unregister(SW_PATH);
         }
         catch (err) {
@@ -33,6 +47,7 @@ export const initSw = async () => {
     }
     let serviceWorker;
     try {
+        // TODO add post message callback
         serviceWorker = await SWManager.register(SW_PATH, swRegistrationConfig);
         return serviceWorker;
     }
