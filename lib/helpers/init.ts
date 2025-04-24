@@ -26,10 +26,11 @@ export const isSWRegistrationValid = (): boolean => {
 };
 
 export const initSw = async (): Promise<SWManager | undefined> => {
-  const isSwEnabled = DEBUG_MODE || SW_ENABLED;
-
-  if (!isSwEnabled) {
+  if (!SW_ENABLED) {
     try {
+      console.log({
+        SW_PATH
+      });
       await SWManager.unregister(SW_PATH);
     } catch (err: unknown) {
       // TODO post message with error
@@ -50,6 +51,7 @@ export const initSw = async (): Promise<SWManager | undefined> => {
   let serviceWorker: SWManager;
 
   try {
+    // TODO add post message callback
     serviceWorker = await SWManager.register(SW_PATH, swRegistrationConfig);
 
     return serviceWorker;
