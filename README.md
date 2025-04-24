@@ -1,3 +1,7 @@
+<div align="center">
+  <h1><code>simple-service-worker</code></h1><sub>Built with 🕸</sub>
+</div>
+
 ## Description
 
 This Service worker (SW) implements [proxy server](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers) for HTTP requests initiated in the

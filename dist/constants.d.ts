@@ -22,9 +22,9 @@ export declare enum HttpStatusCode {
 }
 export declare const ALLOWED_BROWSERS: RegExp;
 export declare const ASSETS_PATH: string;
+export declare const STATIC_ASSETS_PATH: string;
 export declare const CACHE_VERSION: string;
 export declare const DEBUG_MODE: boolean;
 export declare const FORBIDDEN_DOMAINS: string[];
-export declare const STATIC_ASSETS_PATH: string;
 export declare const SW_PATH: string;
 export declare const SW_ENABLED: boolean;

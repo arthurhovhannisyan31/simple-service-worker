@@ -1,36 +1,21 @@
 // eslint-disable-next-line import/no-unresolved
 import { UAParser } from "ua-parser-js";
-import { ALLOWED_BROWSERS, DEBUG_MODE, FORBIDDEN_DOMAINS, SW_ENABLED, SW_PATH, swRegistrationConfig } from "../constants";
+import { DEFAULT_SW_PATH, swRegistrationConfig } from "../constants";
 import { isSSR, isIframe } from "./utils";
 import { SWManager } from "../managers";
-export const isSWRegistrationValid = () => {
+export const isSWRegistrationValid = (allowedBrowsers = new RegExp(".*"), forbiddenDomains = [], isDebugMode) => {
     if (isSSR() || !navigator.serviceWorker)
         return false;
     const parser = new UAParser(navigator.userAgent);
     const curBrowser = parser.getBrowser()?.name ?? "None";
-    const isBrowserAllowed = ALLOWED_BROWSERS.test(curBrowser);
-    const isReferrerAllowed = !FORBIDDEN_DOMAINS.some((domain) => document.referrer.includes(domain) || document.URL.includes(domain));
-    console.log({
-        ALLOWED_BROWSERS,
-        curBrowser,
-        isBrowserAllowed,
-        FORBIDDEN_DOMAINS,
-        isReferrerAllowed,
-        DEBUG_MODE,
-        valid: DEBUG_MODE || (!isIframe() && isBrowserAllowed && isReferrerAllowed)
-    });
-    return DEBUG_MODE || (!isIframe() && isBrowserAllowed && isReferrerAllowed);
+    const isBrowserAllowed = allowedBrowsers.test(curBrowser);
+    const isReferrerAllowed = !forbiddenDomains.some((domain) => document.referrer.includes(domain) || document.URL.includes(domain));
+    return !!isDebugMode || (!isIframe() && isBrowserAllowed && isReferrerAllowed);
 };
-export const initSw = async () => {
-    console.log({
-        SW_ENABLED
-    });
-    if (!SW_ENABLED) {
+export const initSw = async (enabled, swPath = DEFAULT_SW_PATH) => {
+    if (!enabled) {
         try {
-            console.log({
-                SW_PATH
-            });
-            await SWManager.unregister(SW_PATH);
+            await SWManager.unregister(swPath);
         }
         catch (err) {
             // TODO post message with error
@@ -48,7 +33,7 @@ export const initSw = async () => {
     let serviceWorker;
     try {
         // TODO add post message callback
-        serviceWorker = await SWManager.register(SW_PATH, swRegistrationConfig);
+        serviceWorker = await SWManager.register(swPath, swRegistrationConfig);
         return serviceWorker;
     }
     catch {

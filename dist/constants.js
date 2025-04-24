@@ -38,10 +38,10 @@ export var HttpStatusCode;
 })(HttpStatusCode || (HttpStatusCode = {}));
 export const ALLOWED_BROWSERS = new RegExp(process.env.ALLOWED_BROWSERS ?? ".*"); // optional
 export const ASSETS_PATH = process.env.ASSETS_PATH ?? DEFAULT_ASSETS_PATH; // optional
+export const STATIC_ASSETS_PATH = process.env.ASSETS_PATH ?? DEFAULT_ASSETS_PATH; // optional
 export const CACHE_VERSION = process.env.CACHE_VERSION ?? DEFAULT_CACHE_VERSION; // optional
 export const DEBUG_MODE = process.env.DEBUG === "true" || isDebugMode(); // optional
 export const FORBIDDEN_DOMAINS = parseJSONArray(process.env.FORBIDDEN_DOMAINS ?? "[]"); // optional
-export const STATIC_ASSETS_PATH = process.env.ASSETS_PATH ?? DEFAULT_ASSETS_PATH; // optional
 export const SW_PATH = process.env.SW_PATH ?? DEFAULT_SW_PATH; // optional
 export const SW_ENABLED = process.env.SW_ENABLED === "true"; // required
 //# sourceMappingURL=constants.js.map
