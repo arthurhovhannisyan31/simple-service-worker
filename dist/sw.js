@@ -1,5 +1,5 @@
 import { AbstractSW } from "./common";
-import { ASSETS_PATH, CACHE_VERSION, DEBUG_MODE, STATIC_ASSETS_PATH, SW_VERSION, SWActions } from "./constants";
+import { DEFAULT_ASSETS_PATH, DEFAULT_CACHE_NAME, SW_VERSION, SWActions } from "./constants";
 import { CacheManager, DataManager, StoreManager } from "./managers";
 export class MainSW extends AbstractSW {
     cacheManager;
@@ -7,11 +7,18 @@ export class MainSW extends AbstractSW {
     dataManager;
     client;
     version = SW_VERSION;
-    constructor(sw) {
+    config;
+    constructor(sw, { assetsPath = DEFAULT_ASSETS_PATH, staticAssetsPath = DEFAULT_ASSETS_PATH, cacheName = DEFAULT_CACHE_NAME, debugMode = false }) {
         super(sw);
+        this.config = {
+            assetsPath,
+            staticAssetsPath,
+            cacheName,
+            debugMode
+        };
         this.storageManager = new StoreManager(sw);
-        this.cacheManager = new CacheManager(sw, this.storageManager, CACHE_VERSION, DEBUG_MODE);
-        this.dataManager = new DataManager(sw, this.cacheManager, CACHE_VERSION);
+        this.cacheManager = new CacheManager(sw, this.storageManager, this.config.cacheName, this.config.debugMode);
+        this.dataManager = new DataManager(sw, this.cacheManager, this.config.cacheName);
         this.setup(this.onInstall, this.onActivate, this.onFetch, this.onMessage);
     }
     init = async () => {
@@ -21,7 +28,10 @@ export class MainSW extends AbstractSW {
             return;
         }
         const assetsManifest = await fetch(assetsPath); // TODO Add types for response
-        await this.cacheManager.init(assetsManifest, ASSETS_PATH);
+        console.log({
+            assetsManifest
+        });
+        await this.cacheManager.init(assetsManifest, this.config.assetsPath);
     };
     onInstall = (_e) => {
         _e.waitUntil(this.init());
@@ -44,7 +54,7 @@ export class MainSW extends AbstractSW {
             _e.respondWith(_e.preloadResponse);
             return;
         }
-        if (_e.request.method === "GET" && _e.request.url.includes(STATIC_ASSETS_PATH)) {
+        if (_e.request.method === "GET" && _e.request.url.includes(this.config.staticAssetsPath)) {
             _e.respondWith(this.dataManager.cacheWithPreload(_e.request, _e.preloadResponse));
             return;
         }

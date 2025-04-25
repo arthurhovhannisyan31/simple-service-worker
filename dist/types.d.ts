@@ -15,3 +15,9 @@ export interface AssetsManifest {
         prefetch: boolean;
     };
 }
+export interface SWConfig {
+    assetsPath: string;
+    staticAssetsPath: string;
+    cacheName: string;
+    debugMode: boolean;
+}
