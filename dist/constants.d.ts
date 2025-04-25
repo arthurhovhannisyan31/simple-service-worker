@@ -1,4 +1,4 @@
-export declare const DEFAULT_CACHE_VERSION = "0.0.1";
+export declare const DEFAULT_CACHE_NAME = "default-cache-name";
 export declare const DEFAULT_ASSETS_PATH = "";
 export declare const SW_VERSION = "v1.0.0";
 export declare const DEFAULT_SW_PATH = "/service-worker.js";
@@ -20,11 +20,3 @@ export declare enum HttpStatusCode {
     PartialContent = 206,
     RangeNotSatisfiable = 416
 }
-export declare const ALLOWED_BROWSERS: RegExp;
-export declare const ASSETS_PATH: string;
-export declare const STATIC_ASSETS_PATH: string;
-export declare const CACHE_VERSION: string;
-export declare const DEBUG_MODE: boolean;
-export declare const FORBIDDEN_DOMAINS: string[];
-export declare const SW_PATH: string;
-export declare const SW_ENABLED: boolean;
