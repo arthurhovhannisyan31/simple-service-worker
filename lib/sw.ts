@@ -65,15 +65,11 @@ export class MainSW extends AbstractSW {
   };
 
   onInstall: ServiceWorkerGlobalScope["oninstall"] = (_e): void => {
-    console.log("onInstall", this.assetsConfig);
-
     _e.waitUntil(this.init());
     _e.waitUntil(this.skipWaiting());
   };
 
   onActivate: ServiceWorkerGlobalScope["onactivate"] = (_e): void => {
-    console.log("onActivate", this.assetsConfig);
-
     _e.waitUntil(this.dataManager.enableNavigationPreload());
     _e.waitUntil(this.cacheManager.deleteOldCaches());
     _e.waitUntil(this.cacheManager.deleteOldResources());
@@ -97,10 +93,6 @@ export class MainSW extends AbstractSW {
       return;
     }
 
-    console.log(_e);
-    console.log(this.assetsConfig.paths);
-    console.log(this.assetsConfig.paths.some((path) => _e.request.url.includes(path)));
-
     /*
     * skip non GET requests
     * skip non http requests (chrome-extension://*)
@@ -114,6 +106,8 @@ export class MainSW extends AbstractSW {
       _e.respondWith(
         fetch(_e.request),
       );
+
+      return;
     }
 
     _e.respondWith(this.dataManager.cacheWithPreload(

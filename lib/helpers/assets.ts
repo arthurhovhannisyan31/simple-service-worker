@@ -18,6 +18,6 @@ export const getAssetsConfig = (
   }, {
     paths: [] as string[],
     prefetchPaths: [] as string[],
-    prefetchSize: [] as string[],
+    prefetchSize: 0,
   });
 };

@@ -9,6 +9,12 @@ yarn add
 no env variables required
 pass config to constructor and init helpers
 
+
+add performance metrics for onFetch
+explain why not just remove referrer and compare
+
+test new-version release
+
 ## Description
 
 This Service worker (SW) implements [proxy server](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers) for HTTP requests initiated in the

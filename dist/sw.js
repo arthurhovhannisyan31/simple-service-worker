@@ -29,12 +29,10 @@ export class MainSW extends AbstractSW {
         await this.cacheManager.init(this.assetsConfig);
     };
     onInstall = (_e) => {
-        console.log("onInstall", this.assetsConfig);
         _e.waitUntil(this.init());
         _e.waitUntil(this.skipWaiting());
     };
     onActivate = (_e) => {
-        console.log("onActivate", this.assetsConfig);
         _e.waitUntil(this.dataManager.enableNavigationPreload());
         _e.waitUntil(this.cacheManager.deleteOldCaches());
         _e.waitUntil(this.cacheManager.deleteOldResources());
@@ -51,9 +49,6 @@ export class MainSW extends AbstractSW {
             _e.respondWith(_e.preloadResponse);
             return;
         }
-        console.log(_e);
-        console.log(this.assetsConfig.paths);
-        console.log(this.assetsConfig.paths.some((path) => _e.request.url.includes(path)));
         /*
         * skip non GET requests
         * skip non http requests (chrome-extension://*)
@@ -63,6 +58,7 @@ export class MainSW extends AbstractSW {
             || !_e.request.url.startsWith("http")
             || !this.assetsConfig.paths.some((path) => _e.request.url.includes(path))) {
             _e.respondWith(fetch(_e.request));
+            return;
         }
         _e.respondWith(this.dataManager.cacheWithPreload(_e.request, _e.preloadResponse));
         return;

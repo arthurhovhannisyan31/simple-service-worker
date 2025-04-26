@@ -10,7 +10,7 @@ export const getAssetsConfig = (assetsManifest, assetsPath) => {
     }, {
         paths: [],
         prefetchPaths: [],
-        prefetchSize: [],
+        prefetchSize: 0,
     });
 };
 //# sourceMappingURL=assets.js.map

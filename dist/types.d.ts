@@ -8,13 +8,12 @@ export interface AssetsConfig {
     prefetchPaths: string[];
     prefetchSize: number;
 }
-export interface AssetsManifest {
-    key: string;
-    value: {
-        path: string;
-        prefetch: boolean;
-    };
+export interface AssetsManifestEntry {
+    path: string;
+    prefetch: boolean;
+    size: number;
 }
+export type AssetsManifest = Record<string, AssetsManifestEntry>;
 export interface SWConfig {
     assetsPath: string;
     staticAssetsPath: string;
