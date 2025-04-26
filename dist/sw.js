@@ -1,5 +1,6 @@
 import { AbstractSW } from "./common";
 import { DEFAULT_ASSETS_PATH, DEFAULT_CACHE_NAME, SW_VERSION, SWActions } from "./constants";
+import { getAssetsConfig } from "./helpers";
 import { CacheManager, DataManager, StoreManager } from "./managers";
 export class MainSW extends AbstractSW {
     cacheManager;
@@ -7,8 +8,9 @@ export class MainSW extends AbstractSW {
     dataManager;
     client;
     version = SW_VERSION;
+    assetsConfig;
     config;
-    constructor(sw, { assetsPath = DEFAULT_ASSETS_PATH, staticAssetsPath = DEFAULT_ASSETS_PATH, cacheName = DEFAULT_CACHE_NAME, debugMode = false }) {
+    constructor(sw, assetsManifest, { assetsPath = DEFAULT_ASSETS_PATH, staticAssetsPath = DEFAULT_ASSETS_PATH, cacheName = DEFAULT_CACHE_NAME, debugMode = false }) {
         super(sw);
         this.config = {
             assetsPath,
@@ -16,6 +18,7 @@ export class MainSW extends AbstractSW {
             cacheName,
             debugMode
         };
+        this.assetsConfig = getAssetsConfig(assetsManifest, assetsPath);
         this.storageManager = new StoreManager(sw);
         this.cacheManager = new CacheManager(sw, this.storageManager, this.config.cacheName, this.config.debugMode);
         this.dataManager = new DataManager(sw, this.cacheManager, this.config.cacheName);
@@ -23,21 +26,15 @@ export class MainSW extends AbstractSW {
     }
     init = async () => {
         await this.storageManager.estimate();
-        const assetsPath = process.env.ASSETS_MANIFEST;
-        if (!assetsPath) {
-            return;
-        }
-        const assetsManifest = await fetch(assetsPath); // TODO Add types for response
-        console.log({
-            assetsManifest
-        });
-        await this.cacheManager.init(assetsManifest, this.config.assetsPath);
+        await this.cacheManager.init(this.assetsConfig);
     };
     onInstall = (_e) => {
+        console.log("onInstall", this.assetsConfig);
         _e.waitUntil(this.init());
         _e.waitUntil(this.skipWaiting());
     };
     onActivate = (_e) => {
+        console.log("onActivate", this.assetsConfig);
         _e.waitUntil(this.dataManager.enableNavigationPreload());
         _e.waitUntil(this.cacheManager.deleteOldCaches());
         _e.waitUntil(this.cacheManager.deleteOldResources());
@@ -54,11 +51,21 @@ export class MainSW extends AbstractSW {
             _e.respondWith(_e.preloadResponse);
             return;
         }
-        if (_e.request.method === "GET" && _e.request.url.includes(this.config.staticAssetsPath)) {
-            _e.respondWith(this.dataManager.cacheWithPreload(_e.request, _e.preloadResponse));
-            return;
+        console.log(_e);
+        console.log(this.assetsConfig.paths);
+        console.log(this.assetsConfig.paths.some((path) => _e.request.url.includes(path)));
+        /*
+        * skip non GET requests
+        * skip non http requests (chrome-extension://*)
+        * skip requests out of assets-manifest scope
+        * */
+        if (_e.request.method !== "GET"
+            || !_e.request.url.startsWith("http")
+            || !this.assetsConfig.paths.some((path) => _e.request.url.includes(path))) {
+            _e.respondWith(fetch(_e.request));
         }
-        _e.respondWith(fetch(_e.request));
+        _e.respondWith(this.dataManager.cacheWithPreload(_e.request, _e.preloadResponse));
+        return;
     };
     onMessage = async (_e) => {
         const senderId = _e.source.id;

@@ -1,5 +1,5 @@
 import type { StoreManager } from "./store-manager";
-import type { AssetsManifest } from "../types";
+import type { AssetsConfig } from "../types";
 export declare class CacheManager {
     protected worker: ServiceWorkerGlobalScope;
     protected storeManager: StoreManager;
@@ -7,7 +7,7 @@ export declare class CacheManager {
     protected debug: boolean;
     assets: string[];
     constructor(worker: ServiceWorkerGlobalScope, storeManager: StoreManager, cacheVersion: string, debug: boolean);
-    init: (assetsManifest: AssetsManifest, assetsPath: string) => Promise<void>;
+    init: (assetsConfig: AssetsConfig) => Promise<void>;
     add(requests: RequestInfo[], size: number): Promise<void>;
     put(request: RequestInfo, response: Response): Promise<void>;
     delete: (key: string) => Promise<void>;

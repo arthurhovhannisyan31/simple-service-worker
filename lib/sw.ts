@@ -5,9 +5,10 @@ import {
   SW_VERSION,
   SWActions
 } from "./constants";
+import { getAssetsConfig } from "./helpers";
 import { CacheManager, DataManager, StoreManager } from "./managers";
 
-import type { AssetsManifest, SWConfig } from "./types";
+import type { AssetsConfig, AssetsManifest, SWConfig } from "./types";
 
 export class MainSW extends AbstractSW {
   cacheManager: CacheManager;
@@ -15,10 +16,13 @@ export class MainSW extends AbstractSW {
   dataManager: DataManager;
   client?: Client;
   version = SW_VERSION;
+  assetsConfig: AssetsConfig;
   config: SWConfig;
 
   constructor(
-    sw: ServiceWorkerGlobalScope, {
+    sw: ServiceWorkerGlobalScope,
+    assetsManifest: AssetsManifest,
+    {
       assetsPath = DEFAULT_ASSETS_PATH,
       staticAssetsPath = DEFAULT_ASSETS_PATH,
       cacheName = DEFAULT_CACHE_NAME,
@@ -33,6 +37,7 @@ export class MainSW extends AbstractSW {
       cacheName,
       debugMode
     };
+    this.assetsConfig = getAssetsConfig(assetsManifest, assetsPath);
     this.storageManager = new StoreManager(sw);
     this.cacheManager = new CacheManager(
       sw,
@@ -56,29 +61,19 @@ export class MainSW extends AbstractSW {
 
   init = async (): Promise<void> => {
     await this.storageManager.estimate();
-    const assetsPath: string | undefined = process.env.ASSETS_MANIFEST;
-
-    if (!assetsPath) {
-      return;
-    }
-
-    const assetsManifest = await fetch(assetsPath); // TODO Add types for response
-    console.log({
-      assetsManifest
-    });
-
-    await this.cacheManager.init(
-      assetsManifest as never as AssetsManifest,
-      this.config.assetsPath
-    );
+    await this.cacheManager.init(this.assetsConfig);
   };
 
   onInstall: ServiceWorkerGlobalScope["oninstall"] = (_e): void => {
+    console.log("onInstall", this.assetsConfig);
+
     _e.waitUntil(this.init());
     _e.waitUntil(this.skipWaiting());
   };
 
   onActivate: ServiceWorkerGlobalScope["onactivate"] = (_e): void => {
+    console.log("onActivate", this.assetsConfig);
+
     _e.waitUntil(this.dataManager.enableNavigationPreload());
     _e.waitUntil(this.cacheManager.deleteOldCaches());
     _e.waitUntil(this.cacheManager.deleteOldResources());
@@ -102,18 +97,31 @@ export class MainSW extends AbstractSW {
       return;
     }
 
-    if (_e.request.method === "GET" && _e.request.url.includes(this.config.staticAssetsPath)) {
-      _e.respondWith(this.dataManager.cacheWithPreload(
-        _e.request,
-        _e.preloadResponse,
-      ));
+    console.log(_e);
+    console.log(this.assetsConfig.paths);
+    console.log(this.assetsConfig.paths.some((path) => _e.request.url.includes(path)));
 
-      return;
+    /*
+    * skip non GET requests
+    * skip non http requests (chrome-extension://*)
+    * skip requests out of assets-manifest scope
+    * */
+    if (
+      _e.request.method !== "GET"
+      || !_e.request.url.startsWith("http")
+      || !this.assetsConfig.paths.some((path) => _e.request.url.includes(path))
+    ) {
+      _e.respondWith(
+        fetch(_e.request),
+      );
     }
 
-    _e.respondWith(
-      fetch(_e.request),
-    );
+    _e.respondWith(this.dataManager.cacheWithPreload(
+      _e.request,
+      _e.preloadResponse,
+    ));
+
+    return;
   };
 
   onMessage: ServiceWorkerGlobalScope["onmessage"] = async (

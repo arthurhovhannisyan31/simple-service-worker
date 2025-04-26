@@ -1,7 +1,5 @@
-import { getAssetsConfig } from "../helpers";
-
 import type { StoreManager } from "./store-manager";
-import type { AssetsManifest } from "../types";
+import type { AssetsConfig } from "../types";
 
 export class CacheManager {
   assets: string[] = [];
@@ -14,13 +12,9 @@ export class CacheManager {
   ) {}
 
   init = async (
-    assetsManifest: AssetsManifest,
-    assetsPath: string
+    assetsConfig: AssetsConfig
   ): Promise<void> => {
-    const { paths, prefetchPaths, prefetchSize } = getAssetsConfig(
-      assetsManifest,
-      assetsPath
-    );
+    const { paths, prefetchPaths, prefetchSize } = assetsConfig;
 
     this.assets = paths;
 
@@ -85,13 +79,13 @@ export class CacheManager {
     const versionedCacheKeys = await versionedCache.keys();
     const removedAssets: string[] = [];
 
-    versionedCacheKeys.forEach((request: Request) => {
+    for (const request of versionedCacheKeys) {
       if (!this.assets.some((asset: string) => request.url.includes(asset))) {
         if (!this.debug) removedAssets.push(request.url);
 
-        versionedCache.delete(request);
+        await versionedCache.delete(request);
       }
-    });
+    }
 
     if (!this.debug && removedAssets.length) {
       console.group("Debug: Remove outdated assets from cache");

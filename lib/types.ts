@@ -20,7 +20,7 @@ export interface AssetsManifest {
 
 export interface SWConfig {
   assetsPath: string;
-  staticAssetsPath: string;
+  staticAssetsPath: string; // Not needed
   cacheName: string;
-  debugMode: boolean;
+  debugMode: boolean; // Not needed
 }

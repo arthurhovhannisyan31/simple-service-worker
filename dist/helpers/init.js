@@ -3,6 +3,7 @@ import { UAParser } from "ua-parser-js";
 import { DEFAULT_SW_PATH, swRegistrationConfig } from "../constants";
 import { isSSR, isIframe } from "./utils";
 import { SWManager } from "../managers";
+// TODO maybe move as static methods to manager
 export const isSWRegistrationValid = (allowedBrowsers = new RegExp(".*"), forbiddenDomains = [], isDebugMode) => {
     if (isSSR() || !navigator.serviceWorker)
         return false;
@@ -12,6 +13,7 @@ export const isSWRegistrationValid = (allowedBrowsers = new RegExp(".*"), forbid
     const isReferrerAllowed = !forbiddenDomains.some((domain) => document.referrer.includes(domain) || document.URL.includes(domain));
     return !!isDebugMode || (!isIframe() && isBrowserAllowed && isReferrerAllowed);
 };
+// TODO maybe move as static methods to manager
 export const initSw = async (enabled, swPath = DEFAULT_SW_PATH) => {
     if (!enabled) {
         try {
@@ -47,14 +49,4 @@ export const initSw = async (enabled, swPath = DEFAULT_SW_PATH) => {
         // });
     }
 };
-// TODO Extract as a helper
-// export const useInitSW = (): void => {
-//   const swManagerRef = useRef<SWManager | null>(null);
-//
-//   useEffect(() => {
-//     if (!isSWRegistrationValid() || swManagerRef.current) return;
-//
-//     initSw(swManagerRef);
-//   }, []);
-// };
 //# sourceMappingURL=init.js.map
