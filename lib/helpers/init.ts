@@ -8,6 +8,7 @@ import {
 import { isSSR, isIframe } from "./utils";
 import { SWManager } from "../managers";
 
+// TODO maybe move as static methods to manager
 export const isSWRegistrationValid = (
   allowedBrowsers = new RegExp(".*"),
   forbiddenDomains: string[] = [],
@@ -25,6 +26,7 @@ export const isSWRegistrationValid = (
   return !!isDebugMode || (!isIframe() && isBrowserAllowed && isReferrerAllowed);
 };
 
+// TODO maybe move as static methods to manager
 export const initSw = async (
   enabled: boolean,
   swPath: string = DEFAULT_SW_PATH
@@ -67,14 +69,3 @@ export const initSw = async (
     // });
   }
 };
-
-// TODO Extract as a helper
-// export const useInitSW = (): void => {
-//   const swManagerRef = useRef<SWManager | null>(null);
-//
-//   useEffect(() => {
-//     if (!isSWRegistrationValid() || swManagerRef.current) return;
-//
-//     initSw(swManagerRef);
-//   }, []);
-// };
