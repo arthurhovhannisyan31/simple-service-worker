@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-unresolved
+import { UAParser } from "ua-parser-js";
+
 import { SWActions } from "../constants";
 
 export const isSSR = (): boolean => typeof window === "undefined";
@@ -17,21 +20,22 @@ export function isShowNotificationAction(
 ): action is Action<NotificationOptions> {
   return action.type === SWActions.SHOW_NOTIFICATION;
 }
+export const isSWRegistrationValid = (
+  allowedBrowsers = new RegExp(".*"),
+  forbiddenDomains: string[] = [],
+  debug?: boolean
+): boolean => {
+  if (isSSR() || !navigator.serviceWorker) return false;
 
-export const parseJSONArray = <T>(
-  env?: string
-): T[] => {
-  const values: T[] = [];
+  const parser = new UAParser(navigator.userAgent);
+  const curBrowser = parser.getBrowser()?.name ?? "None";
+  const isBrowserAllowed = allowedBrowsers.test(curBrowser);
+  const isReferrerAllowed = !forbiddenDomains.some(
+    (domain) => document.referrer.includes(domain) || document.URL.includes(domain)
+  );
+  const debugMode = !!debug || isDebugMode();
 
-  try {
-    const parsedValues = JSON.parse(env ?? "[]") as T[];
-
-    if (Array.isArray(parsedValues) && parsedValues.every((val) => typeof val === "string")) {
-      values.push(...parsedValues);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-
-  return values;
+  return debugMode || (!isIframe() && isBrowserAllowed && isReferrerAllowed);
 };
+
+export const noop = () => null;

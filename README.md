@@ -4,6 +4,10 @@
 
 ## Usage
 
+1. how to install
+2. how to configure
+3. how to measure
+
 yarn add
 
 no env variables required
@@ -14,6 +18,12 @@ add performance metrics for onFetch
 explain why not just remove referrer and compare
 
 test new-version release
+
+life cycle:
+1 install and activate
+2 cleanup old caches
+3 proxy fetch requests ans cache ones from assets manifest
+4 repeat 1 on update
 
 ## Description
 
