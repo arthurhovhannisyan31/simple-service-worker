@@ -10,11 +10,10 @@ export class MainSW extends AbstractSW {
     version = SW_VERSION;
     assetsConfig;
     config;
-    constructor(sw, assetsManifest, { assetsPath = DEFAULT_ASSETS_PATH, staticAssetsPath = DEFAULT_ASSETS_PATH, cacheName = DEFAULT_CACHE_NAME, debugMode = false }) {
+    constructor(sw, assetsManifest, { assetsPath = DEFAULT_ASSETS_PATH, cacheName = DEFAULT_CACHE_NAME, debugMode = false }) {
         super(sw);
         this.config = {
             assetsPath,
-            staticAssetsPath,
             cacheName,
             debugMode
         };

@@ -16,7 +16,6 @@ export enum SWActions {
   UPDATE_FOUND = "UPDATE_FOUND",
 }
 
-// TODO Check usages
 export const SWActionLabels: Partial<Record<SWActions, string>> = {
   [SWActions.REGISTRATION]: "SW registration",
   [SWActions.REGISTRATION_FAILURE]: "SW registration failure",

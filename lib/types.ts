@@ -20,7 +20,6 @@ export type AssetsManifest = Record<string, AssetsManifestEntry>;
 
 export interface SWConfig {
   assetsPath: string;
-  staticAssetsPath: string; // Not needed
   cacheName: string;
-  debugMode: boolean; // Not needed
+  debugMode: boolean;
 }
