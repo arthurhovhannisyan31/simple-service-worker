@@ -24,7 +24,6 @@ export class MainSW extends AbstractSW {
     assetsManifest: AssetsManifest,
     {
       assetsPath = DEFAULT_ASSETS_PATH,
-      staticAssetsPath = DEFAULT_ASSETS_PATH,
       cacheName = DEFAULT_CACHE_NAME,
       debugMode = false
     }: Partial<SWConfig>
@@ -33,7 +32,6 @@ export class MainSW extends AbstractSW {
 
     this.config = {
       assetsPath,
-      staticAssetsPath,
       cacheName,
       debugMode
     };

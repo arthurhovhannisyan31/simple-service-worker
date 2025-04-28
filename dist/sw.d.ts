@@ -9,7 +9,7 @@ export declare class MainSW extends AbstractSW {
     version: string;
     assetsConfig: AssetsConfig;
     config: SWConfig;
-    constructor(sw: ServiceWorkerGlobalScope, assetsManifest: AssetsManifest, { assetsPath, staticAssetsPath, cacheName, debugMode }: Partial<SWConfig>);
+    constructor(sw: ServiceWorkerGlobalScope, assetsManifest: AssetsManifest, { assetsPath, cacheName, debugMode }: Partial<SWConfig>);
     init: () => Promise<void>;
     onInstall: ServiceWorkerGlobalScope["oninstall"];
     onActivate: ServiceWorkerGlobalScope["onactivate"];

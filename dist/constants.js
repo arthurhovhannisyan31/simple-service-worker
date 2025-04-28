@@ -15,7 +15,6 @@ export var SWActions;
     SWActions["UNREGISTER_SW"] = "UNREGISTER_SW";
     SWActions["UPDATE_FOUND"] = "UPDATE_FOUND";
 })(SWActions || (SWActions = {}));
-// TODO Check usages
 export const SWActionLabels = {
     [SWActions.REGISTRATION]: "SW registration",
     [SWActions.REGISTRATION_FAILURE]: "SW registration failure",

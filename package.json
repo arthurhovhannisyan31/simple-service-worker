@@ -2,6 +2,7 @@
   "version": "1.0.0",
   "description": "Simple service worker package",
   "author": "Arthur Hovhannisyan",
+  "type": "module",
   "name": "@arthurhovhannisyan31/simple-service-worker",
   "private": true,
   "scope": "arthurhovhannisyan31",
