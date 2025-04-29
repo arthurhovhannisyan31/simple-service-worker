@@ -89,7 +89,7 @@ Example:
     "size": 2320,
     "prefetch": false
   },
-  ...
+  "...": {},
   "favicon.ico": {
     "path": "favicon.ico",
     "size": 318,
@@ -156,11 +156,12 @@ new MainSW(
 export default {} as ServiceWorker;
 ```
 - `MainSW` - will bring all the JS code needed for the `SW` instance. `MainSW` is a regular JS class and can be subclassed and enhanced if needed.
-- `assetsPath` - is the base path to serving folder of your FE server.
+- `assetsPath` - is the base path to serving folder of your FE server. Resulting path builds as follows: `${assetsPath}/${filePath}`.
 - `debugMode` - provides extra information regarding `SW` workflow which is logged to the console.
 - `assets-manifest` - can be generated to any path and should be available for import during build time.
 
-> - NextJS web-server serves static assets are served from `_next/static/`
+> - NextJS web-server serves static assets from `/_next` and resulting path should have following structure: `/_next/static/chunks/webpack-fb87bb6d32811a51.js`
+> - Assets may be served from the root path, in that case `assetsPath` can be omited: `/favicon.ico`
 > - To avoid missing `assets-manifest` import error just [touch](https://www.ibm.com/docs/hu/aix/7.2?topic=t-touch-command) the file before running build scripts 
 
 ### `SW` bundle generation
