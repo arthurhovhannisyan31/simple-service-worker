@@ -10,7 +10,7 @@ export const getAssetsConfig = (
     acc.paths.push(path);
 
     if (prefetch) {
-      acc.prefetchPaths.push(`/${assetsPath}/${path}`);
+      acc.prefetchPaths.push(`${assetsPath}/${path}`);
       acc.prefetchSize += size;
     }
 
