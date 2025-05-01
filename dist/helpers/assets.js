@@ -3,7 +3,7 @@ export const getAssetsConfig = (assetsManifest, assetsPath) => {
     return resources.reduce((acc, { size, path, prefetch }) => {
         acc.paths.push(path);
         if (prefetch) {
-            acc.prefetchPaths.push(`/${assetsPath}/${path}`);
+            acc.prefetchPaths.push(`${assetsPath}/${path}`);
             acc.prefetchSize += size;
         }
         return acc;
