@@ -11,3 +11,12 @@
 
 #!.yarn/cache
 .pnp.*
+
+#dev
+.env
+/node_modules
+.eslintcache
+*.tsbuildinfo
+
+#local
+notes*

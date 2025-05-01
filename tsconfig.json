@@ -1,0 +1,34 @@
+{
+  "extends": "./configs/typescript/tsconfig.rules.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "outDir": "dist",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "webworker"
+    ],
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "./configs/typescript/typings"
+    ],
+  },
+  "include": [
+    "**/*.ts",
+    "**/.*.js", // needed for *js config files with leading dot,
+    "**/.*.mjs", // needed for *js config files with leading dot,
+    "**/*.js",
+    "**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
