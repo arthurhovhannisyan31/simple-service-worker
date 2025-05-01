@@ -3,27 +3,35 @@
 </div>
 
 # Overview
+
+## About
+`Simple Service Worker` is a lightweight, **framework-agnostic** service worker that implements a cache-first strategy to serve 
+validated HTTP GET requests from the browser cache, **reducing network load and improving performance**. It integrates easily 
+with modern build systems (like Webpack), supports dynamic asset caching via a manifest, and ensures outdated assets are 
+cleaned up automatically. The solution is configurable, easy to initialize, and safe to add or remove without introducing dependencies.
+
+## Implementation
 This Service worker (SW)  implements [proxy server](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers) for HTTP requests initiated in the [Main thread](https://developer.mozilla.org/en-US/docs/Glossary/Main_thread) or [Worker thread](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API).
 All requests are intercepted by `SW` and only validated requests are served right from the  browser [Cache](https://developer.mozilla.org/en-US/docs/Web/API/Cache) if present.
 Implemented serving strategy is [Cache first](https://web.dev/learn/pwa/serving#cache_first). Assets are served from the `Cache` and missing assets are fetched and stored in the `Cache`. 
 
 `SW` is framework-agnostic, it does not affect runtime code in any way. `SW` is easy to add and remove from the project, it does not create any dependency risk.
 
-Only one instance of `SW` is allowed for registration and only one instance of `Cache` can be used at time.
+Only one instance of `SW` is allowed for registration, and only one instance of `Cache` can be used at a time.
 
 > Learn more:
 > - [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
 > - [PWA: Service workers](https://web.dev/learn/pwa/service-workers)
 
-# Assets fetching, caching and serving
+## Assets fetching, caching and serving
 Request validation includes checks for request method, protocol and match against manifest file. 
 
 Request should have `GET` method, `http*` like protocol and `URL` should have matching entry in `assets-manifest`.
-Matching request response is searched in dedicated `CachedStorage` and served right away if present and missing assets are fetched and cached.
+Matching request response is searched in dedicated `CacheStorage` and served right away if present and missing assets are fetched and cached.
 
 All other type of requests are fetched and served as usual, `SW` does not modify or change any parameters in request or response.
 
-Before pushing response to the dedicated `CachedStorage` available memory quota is checked using
+Before pushing response to the dedicated `CacheStorage` available memory quota is checked using
 `StorageManager`.
 In case a given response size can fit into available memory quota, the response is cached.
 
@@ -31,9 +39,9 @@ This approach provides flexibility in build assets structure and limits files wh
 
 > See implementation details [sw.ts](https://github.com/arthurhovhannisyan31/simple-service-worker/blob/main/lib/sw.ts), [data-manager.ts](https://github.com/arthurhovhannisyan31/simple-service-worker/blob/main/lib/managers/data-manager.ts)
 
-# Cleanup
+## Cache cleanup
 Before storing responses to browser `Cache` all outdated responses are cleaned up from the memory.
-On page load registered `SW` checks dedicated `CachedStorage` against newest `assets-manifest.json` file. Any response from cache missing in assets-manifest is deleted as outdated, hence only
+On page load registered `SW` checks dedicated `CacheStorage` against newest `assets-manifest.json` file. Any response from cache missing in assets-manifest is deleted as outdated, hence only
 assets from the latest build stored in the client memory.
 
 > See implementation details [cache-manager.ts](https://github.com/arthurhovhannisyan31/simple-service-worker/blob/main/lib/managers/cache-manager.ts)
@@ -98,9 +106,11 @@ Example:
 }
 ```
 Filenames should include the hashed code, the [contenthash](https://webpack.js.org/guides/caching/#output-filenames). It works as file versioning and helps to
-distinguish assets from the same import path between the builds. If file name is missing `contenthash` from it's name it will not be invalidated by `SW` and new response for that request will not be served.
+distinguish assets from the same import path between the builds. If the file name is missing `contenthash` from its
+name, it will not be invalidated by `SW` and a new response for that request will not be served.
 
-> To force `SW` update it's cached assets a new `cache-name` should be provided to `SW` constructor. A new cache will be created and old one disposed.
+> To force `SW` to update it's cached assets, a new `cache-name` should be provided to `SW` constructor. 
+> A new cache will be created and the old one disposed.
 
 ### `assets-manifest` generation using [webpack-assets-manifest](https://www.npmjs.com/package/webpack-assets-manifest)
 ```js
@@ -129,8 +139,9 @@ distinguish assets from the same import path between the builds. If file name is
     ...
   ]
 ```
+
 ### `SW` module
-A `SW` module should be a standalone js module, which should include all required code for it's workflow.
+A `SW` module should be a standalone JS module, which should include all required code for its workflow.
 
 Create a new file `<sw-module-name>.ts` and set it up as follows:
 
@@ -160,9 +171,9 @@ export default {} as ServiceWorker;
 - `debugMode` - provides extra information regarding `SW` workflow which is logged to the console.
 - `assets-manifest` - can be generated to any path and should be available for import during build time.
 
-> - NextJS web-server serves static assets from `/_next` and resulting path should have following structure: `/_next/static/chunks/webpack-fb87bb6d32811a51.js`
+> - NextJS web-server serves static assets from `/_next` and resulting path should have the following structure: `/_next/static/chunks/webpack-fb87bb6d32811a51.js`
 > - Assets may be served from the root path, in that case `assetsPath` can be omited: `/favicon.ico`
-> - To avoid missing `assets-manifest` import error just [touch](https://www.ibm.com/docs/hu/aix/7.2?topic=t-touch-command) the file before running build scripts 
+> - To avoid missing `assets-manifest` import error, just [touch](https://www.ibm.com/docs/hu/aix/7.2?topic=t-touch-command) the file before running build scripts 
 
 ### `SW` bundle generation
 `SW` bundle should include all the required code and emitted to project distribution folder along with other files. Code can be bundled to a single file or imported using ES imports. 
@@ -235,7 +246,7 @@ module.exports = {
 ### `SW` init function
 `SW` init function should be added to the root of your main.js file or root component.
 
-A `SW Manager` instance accepts following config for instantiation: 
+A `SW Manager` instance accepts the following config for instantiation: 
 
 ```typescript
     {
