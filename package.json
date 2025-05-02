@@ -2,10 +2,9 @@
   "author": "Arthur Hovhannisyan",
   "description": "Simple service worker package",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scope": "arthurhovhannisyan31",
   "name": "@arthurhovhannisyan31/simple-service-worker",
-  "private": true,
   "packageManager": "yarn@4.9.0",
   "repository": {
     "type": "git",
