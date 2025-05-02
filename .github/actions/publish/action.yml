@@ -1,0 +1,26 @@
+name: Publish to npm
+description: Publish Package to npmjs
+inputs:
+  node-auth-token:
+    description: NPM token
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        registry-url: 'https://registry.npmjs.org'
+    - name: Enable yarn
+      shell: bash
+      run: corepack enable
+    - name: Authentication
+      shell: bash
+      run: |
+        echo npmAuthToken: ${{ inputs.node-auth-token }} >> ./.yarnrc.yml
+    - name: Publish
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.node-auth-token }}
+      shell: bash
+      run: yarn npm publish --provenance --access public
