@@ -2,7 +2,7 @@
   "author": "Arthur Hovhannisyan",
   "description": "Simple service worker package",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scope": "arthurhovhannisyan31",
   "name": "@arthurhovhannisyan31/simple-service-worker",
   "private": true,
@@ -17,7 +17,8 @@
     "README.md"
   ],
   "publishConfig": {
-    "access": "restricted"
+    "access": "restricted",
+    "provenance": true
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.js",
