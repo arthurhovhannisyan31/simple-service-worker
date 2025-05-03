@@ -18,8 +18,12 @@ runs:
     - name: Enable yarn
       shell: bash
       run: corepack enable
-    - name: Publish
+    - name: Log
       shell: bash
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.node-auth-token }}
-      run: yarn npm publish --provenance --access public
+      run: |
+        ls -al .
+#    - name: Publish
+#      shell: bash
+#      env:
+#        NODE_AUTH_TOKEN: ${{ inputs.node-auth-token }}
+#      run: yarn npm publish --provenance --access public
