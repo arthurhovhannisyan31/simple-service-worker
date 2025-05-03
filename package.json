@@ -2,7 +2,7 @@
   "author": "Arthur Hovhannisyan",
   "description": "Simple service worker package",
   "license": "MIT",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "scope": "arthurhovhannisyan31",
   "name": "@arthurhovhannisyan31/simple-service-worker",
   "packageManager": "yarn@4.9.0",
@@ -10,15 +10,17 @@
     "type": "git",
     "url": "https://github.com/arthurhovhannisyan31/simple-service-worker.git"
   },
-  "keywords": ["sw", "service-worker"],
+  "keywords": [
+    "sw",
+    "service-worker"
+  ],
   "files": [
     "dist",
     "README.md"
   ],
   "publishConfig": {
     "access": "restricted",
-    "provenance": true,
-    "registry": "https://npm.pkg.github.com"
+    "provenance": true
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.js",

@@ -45,4 +45,5 @@ jobs:
       - name: Publish to npm
         uses: ./.github/actions/publish
         with:
-          node-auth-token: ${{ secrets.GITHUB_TOKEN }}
+          node-auth-token: ${{ secrets.GITHUB_TOKEN }} #${{ secrets.NPM_TOKEN }}
+          registry-url: 'https://npm.pkg.github.com' #'https://registry.npmjs.org'
