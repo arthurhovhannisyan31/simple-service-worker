@@ -42,7 +42,7 @@ jobs:
         run: |
           echo Released tag: ${{ steps.easy-merge.outputs.release_tag }}
           echo Releasee URL: ${{ steps.easy-release.outputs.release_url }}
-      - name: Publish to npm
+      - name: Publish package
         uses: ./.github/actions/publish
         with:
           node-auth-token: ${{ secrets.GITHUB_TOKEN }} #${{ secrets.NPM_TOKEN }}
