@@ -1,5 +1,4 @@
-name: Publish
-description: Publish package to registry
+name: Publish package
 inputs:
   node-auth-token:
     description: Auth token
@@ -18,12 +17,23 @@ runs:
     - name: Enable yarn
       shell: bash
       run: corepack enable
-    - name: Log
+    - name: Restore dependencies
+      id: restore-dependencies
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Install Packages
       shell: bash
-      run: |
-        ls -al .
-#    - name: Publish
-#      shell: bash
-#      env:
-#        NODE_AUTH_TOKEN: ${{ inputs.node-auth-token }}
-#      run: yarn npm publish --provenance --access public
+      if: ${{ steps.restore-dependencies.outputs.cache-hit != 'true' }}
+      run: yarn
+    - name: Build distribution
+      shell: bash
+      run: yarn build
+    - name: Publish
+      shell: bash
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.node-auth-token }}
+      run: yarn npm publish --provenance --access public
