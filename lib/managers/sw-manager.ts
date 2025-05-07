@@ -103,14 +103,14 @@ export class SWManager {
     if (!enabled) {
       try {
         await SWManager.unregister(swPath);
-      } catch (err: unknown) {
+      } catch (error: unknown) {
         postMessage({
           type: SWActions.ERROR,
           payload: {
-            eventName: SWActionLabels[SWActions.ERROR],
-            eventProperties: {
-              err: (err as Error)?.message ?? "n/a",
-              userAgent: navigator?.userAgent ?? "n/a",
+            label: SWActionLabels[SWActions.ERROR],
+            properties: {
+              error,
+              userAgent: navigator?.userAgent,
             },
           }
         });
@@ -127,14 +127,14 @@ export class SWManager {
         swRegistrationConfig,
         postMessage
       );
-    } catch (err: unknown) {
+    } catch (error: unknown) {
       postMessage({
         type: SWActions.REGISTRATION_FAILURE,
         payload: {
-          eventName: SWActionLabels[SWActions.REGISTRATION_FAILURE],
-          eventProperties: {
-            err: (err as Error)?.message ?? "n/a",
-            userAgent: navigator?.userAgent ?? "n/a",
+          label: SWActionLabels[SWActions.REGISTRATION_FAILURE],
+          properties: {
+            error,
+            userAgent: navigator?.userAgent,
           },
         }
       });
@@ -160,9 +160,9 @@ export class SWManager {
     postMessage({
       type: SWActions.REGISTRATION,
       payload: {
-        eventName: SWActionLabels[SWActions.REGISTRATION],
-        eventProperties: {
-          SW_VERSION,
+        label: SWActionLabels[SWActions.REGISTRATION],
+        properties: {
+          version: SW_VERSION,
         },
       }
     });
